@@ -1,6 +1,6 @@
 package org.utk.nikita.example.service;
 
-import org.utk.nikita.example.entity.Currency;
+import org.utk.nikita.example.entity.CurrencyEnum;
 import org.utk.nikita.example.service.init.HashMapCurrencyModeService;
 
 
@@ -9,12 +9,12 @@ public interface CurrencyModeService {
         return new HashMapCurrencyModeService();
     }
 
-    Currency getOriginalCurrency(long chatId);
+    CurrencyEnum getOriginalCurrency(long chatId);
 
-    Currency getTargetCurrency(long chatId);
+    CurrencyEnum getTargetCurrency(long chatId);
 
-    void setOriginalCurrency(long chatId, Currency currency);
+    void setOriginalCurrency(long chatId, CurrencyEnum currencyEnum);
 
-    void setTargetCurrency(long chatId, Currency currency);
+    void setTargetCurrency(long chatId, CurrencyEnum currencyEnum);
 
 }

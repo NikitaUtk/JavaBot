@@ -1,12 +1,40 @@
 package org.utk.nikita.example.entity;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+public class Currency {
 
-@RequiredArgsConstructor
-@Getter
-public enum Currency {
-    USD(431), EUR(451), RUB(456), BYN(0);
+    public String getCharCode() {
+        return CharCode;
+    }
 
-    private final int id;
+    public void setCharCode(String charCode) {
+        CharCode = charCode;
+    }
+
+    public String getName() {
+        return Name;
+    }
+
+    public void setName(String name) {
+        Name = name;
+    }
+
+    public double getValue() {
+        return Value;
+    }
+
+    public void setValue(double value) {
+        Value = value;
+    }
+
+    public int getNominal() {
+        return Nominal;
+    }
+
+    public void setNominal(int nominal) {
+        Nominal = nominal;
+    }
+    String CharCode;
+    String Name;
+    double Value;
+    int Nominal;
 }
