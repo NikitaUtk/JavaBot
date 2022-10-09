@@ -141,7 +141,7 @@ public class ConverterBot extends TelegramLongPollingBot{
             return Optional.empty();
         }
     }
-
+//
 
     private String getCurrencyButton(CurrencyEnum saved, CurrencyEnum current){
         return saved == current ? current + "✅" : current.name();
