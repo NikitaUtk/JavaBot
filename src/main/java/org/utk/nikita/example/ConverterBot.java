@@ -13,6 +13,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import org.utk.nikita.example.entity.CurrencyEnum;
+import org.utk.nikita.example.entity.YesOrNo;
 import org.utk.nikita.example.service.CurrencyConversionService;
 import org.utk.nikita.example.service.CurrencyModeService;
 
@@ -86,16 +87,18 @@ public class ConverterBot extends TelegramLongPollingBot{
 
     @SneakyThrows
     private void handleMessage(Message message) {
+
         if(message.hasText() && message.hasEntities()){
            Optional<MessageEntity> commandEntity = message.getEntities().stream().filter(e -> "bot_command".equals(e.getType())).findFirst();
 
            if(commandEntity.isPresent()){
                String command = message.getText().substring(commandEntity.get().getOffset(), commandEntity.get().getLength());
+               List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
                switch (command){
                    case "/set_currency":
-                       List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
                        CurrencyEnum originalCurrencyEnum = currencyModeService.getOriginalCurrency(message.getChatId());
                        CurrencyEnum targetCurrencyEnum = currencyModeService.getTargetCurrency(message.getChatId());
+                       YesOrNo newYesOrNo = YesOrNo.NO;
 
                        for (CurrencyEnum currencyEnum : CurrencyEnum.values()) {
                            buttons.add(
@@ -115,6 +118,29 @@ public class ConverterBot extends TelegramLongPollingBot{
                                .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
                                .build());
                        return;
+                   case "/set_answer":
+                       for (YesOrNo value : YesOrNo.values()) {
+                           buttons.add(
+                                   Arrays.asList(
+                                           InlineKeyboardButton.builder()
+                                                   .text("YES")
+                                                   .callbackData("" + value)
+                                                   .build(),
+                                           InlineKeyboardButton.builder()
+                                                   .text("NO")
+                                                   .callbackData("" + value)
+                                                   .build(),
+                                           InlineKeyboardButton.builder()
+                                                   .text("MAYBE")
+                                                   .callbackData("" + value)
+                                                   .build()));
+                           execute(SendMessage.builder()
+                                   .text("Please choose you answer")
+                                   .chatId(message.getChatId().toString())
+                                   .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
+                                   .build());
+                           return;
+                       }
                }
            }
         }
@@ -145,6 +171,9 @@ public class ConverterBot extends TelegramLongPollingBot{
 
     private String getCurrencyButton(CurrencyEnum saved, CurrencyEnum current){
         return saved == current ? current + "✅" : current.name();
+    }
+    private String getButtonGif(YesOrNo saved){
+        return saved == saved ? saved + "✅" : saved.name();
     }
 
     @SneakyThrows
